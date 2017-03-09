@@ -1,0 +1,29 @@
+body {
+    padding:0;
+}
+
+#wrapper {
+    width:800px;
+    margin:70px auto;
+}
+
+#calander {
+    width:600px;
+    height:720px;
+    padding: 0 10px;
+    margin:0 auto;
+    background:#ECECEC;
+    position:relative;
+    overflow:hidden;
+}
+
+.event {
+    background:#fff;
+    color:#4B6EA8;
+    border:1px solid #ccc;
+    border-left:4px solid #4B6EA8;
+    position:absolute;
+    padding:0 10px;
+    font-weight:bold;
+    font-size:13px;
+}
