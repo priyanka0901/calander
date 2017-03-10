@@ -3,9 +3,15 @@ var Calendar = function() {
    var layOutDay = function(events) {
      var eventsLength = events.length;
      var timeslots = [];
-     var event, i, j;
+     var previouswidth = 0;
+     var incmeter = 0;
+     var event, i, j, previouscevc;
+     
      
      // Step 0: Sort events by id.
+     for(var i = 0; i < events.length; i++){
+        events[i].id = i+1;
+     }
      events = events.sort(function(a, b){return a.id - b.id;});
      
      // Step 1: Initialize timeslots.
@@ -42,7 +48,6 @@ var Calendar = function() {
          // Store the greatest concurrent event count (cevc) for each event.
          for (j=0; j<timeslotLength; j++) {
            event = events[timeslots[i][j]-1];
-           
            if (!event.cevc || event.cevc < timeslotLength) {
              event.cevc = timeslotLength;
              
@@ -62,6 +67,7 @@ var Calendar = function() {
      
      // Step 4: Calculate event coordinates and dimensions,
      // and generate DOM.
+     previouscevc = events[0].cevc;
      for (i=0; i<events.length; i++) {
        event = events[i];
        
@@ -71,10 +77,33 @@ var Calendar = function() {
        
        // Width is based on calendar width and the cevc.
        event.pxw = 600 / event.cevc;
+       // console.log(event.cevc);
+       // console.log(event.pxw);
+       // console.log(event.hindex);
        
        // Height uses the same calendar/cevc figure,
        // multiplied by the horizontal index to prevent overlap.
-       event.pxx = event.hindex * event.pxw;
+       
+       if(previouscevc == event.cevc){
+          // debugger;
+          event.pxx = previouswidth * incmeter;
+          previouswidth = event.pxw ? event.pxw : 0;
+          incmeter++;
+       }else{
+          event.pxx = 0;
+          previouswidth = event.pxx;
+          incmeter = 0;
+          event.pxx = previouswidth * incmeter;
+          previouswidth = event.pxw ? event.pxw : 0;
+          incmeter++;
+       }
+       previouscevc = event.cevc;
+       // console.log(event.pxw);
+       // console.log('current incmeter  ', incmeter);
+       // console.log('event cevc  ', event.cevc);
+       // console.log('final pxx   ', event.pxx);
+       // console.log('   ');
+       // console.log('   ');
        
        // Now, the easy part.
        var div = document.createElement("div");
@@ -86,7 +115,7 @@ var Calendar = function() {
        div.style.background = "#"+Math.floor(Math.random()*16777215).toString(16);
        // (random colours will make the events easy to tell apart.)
        
-       console.log(document);
+       // console.log(document);
        document.getElementById("calander").appendChild(div);
      }
    };
@@ -99,10 +128,16 @@ var Calendar = function() {
 }();
 
 var events = [
- {id : 1, start : 60, end : 150},  // an event from 10am to 11:30am
- {id : 2, start : 540, end : 570}, // an event from 6pm to 6:30pm
- {id : 3, start : 555, end : 600}, // an event from 6:15pm to 7pm
- {id : 4, start : 585, end : 660} // an event from 6:45pm to 8pm
+ {id : 10, start :0,"end":90},
+ {id : 13, start :0,"end":90},
+ {id : 11, start :15,"end":90},
+ {id : 12, start :60,"end":90},
+ {id : 14, start :60,"end":180},
+ {id : 15, start :120,"end":150},
+ {id : 16, start :135,"end":165},
+ {id : 18, start :195,"end":240},
+ {id : 17, start :225,"end":285},
+ {id : 19, start :465,"end":645}
 ];
 
 // call now
